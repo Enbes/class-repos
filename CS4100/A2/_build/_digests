@@ -1,0 +1,5 @@
+"Rule: ocaml dependencies ml (%=regexps )": "\001\002\193\213\216\134\252\160\157U\237\027\183\224\136\241"
+"Rule: ocaml: ml -> cmo & cmi (%=regexps )": "\230\252`\1793\162\247\176B\236Ay@;\172\183"
+"Resource: /home/cs4100/Desktop/A2/regexps.ml": "\003bI,\219\127\136\191\221\172\198\203g1\236<"
+"Rule: ocaml: cmx* & o* -> native (%=regexps )": "\156a\218\246\244\211\253\171W\231\030\153\1674\018u"
+"Rule: ocaml: ml & cmi -> cmx & o (%=regexps )": "N\011>\132\182\143\181\\\217)\012\198\128\177&\142"

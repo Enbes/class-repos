@@ -1,0 +1,10 @@
+### Starting build.
+# Target: regexps.ml.depends, tags: { extension:ml, file:regexps.ml, ocaml, ocamldep, quiet }
+/home/cs4100/.opam/4.02.3/bin/ocamldep.opt -modules regexps.ml > regexps.ml.depends
+# Target: regexps.cmo, tags: { byte, compile, extension:cmo, extension:ml, file:regexps.cmo, file:regexps.ml, implem, ocaml, quiet }
+/home/cs4100/.opam/4.02.3/bin/ocamlc.opt -c -I /home/cs4100/.opam/4.02.3/lib/batteries -I /home/cs4100/.opam/4.02.3/lib/bytes -I /home/cs4100/.opam/4.02.3/lib/num -I /home/cs4100/.opam/4.02.3/lib/ocaml -o regexps.cmo regexps.ml
+# Target: regexps.cmx, tags: { compile, extension:cmx, extension:ml, file:regexps.cmx, file:regexps.ml, implem, native, ocaml, quiet }
+/home/cs4100/.opam/4.02.3/bin/ocamlopt.opt -c -I /home/cs4100/.opam/4.02.3/lib/batteries -I /home/cs4100/.opam/4.02.3/lib/bytes -I /home/cs4100/.opam/4.02.3/lib/num -I /home/cs4100/.opam/4.02.3/lib/ocaml -o regexps.cmx regexps.ml
+# Target: regexps.native, tags: { dont_link_with, extension:native, file:regexps.native, link, native, ocaml, program, quiet }
+/home/cs4100/.opam/4.02.3/bin/ocamlopt.opt -I /home/cs4100/.opam/4.02.3/lib/batteries -I /home/cs4100/.opam/4.02.3/lib/bytes -I /home/cs4100/.opam/4.02.3/lib/num -I /home/cs4100/.opam/4.02.3/lib/ocaml /home/cs4100/.opam/4.02.3/lib/ocaml/unix.cmxa /home/cs4100/.opam/4.02.3/lib/ocaml/nums.cmxa /home/cs4100/.opam/4.02.3/lib/ocaml/bigarray.cmxa /home/cs4100/.opam/4.02.3/lib/ocaml/str.cmxa /home/cs4100/.opam/4.02.3/lib/batteries/batteries.cmxa regexps.cmx -o regexps.native
+# Compilation successful.
