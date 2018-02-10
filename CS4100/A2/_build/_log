@@ -1,12 +1,10 @@
 ### Starting build.
 # Target: regexps.ml.depends, tags: { extension:ml, file:regexps.ml, ocaml, ocamldep, quiet, traverse }
-/home/cs4100/.opam/4.02.3/bin/ocamldep.opt -modules regexps.ml > regexps.ml.depends # cached
+/home/cs4100/.opam/4.02.3/bin/ocamldep.opt -modules regexps.ml > regexps.ml.depends
 # Target: regexps.cmo, tags: { byte, compile, extension:cmo, extension:ml, file:regexps.cmo, file:regexps.ml, implem, ocaml, quiet, traverse }
 /home/cs4100/.opam/4.02.3/bin/ocamlc.opt -c -I /home/cs4100/.opam/4.02.3/lib/batteries -I /home/cs4100/.opam/4.02.3/lib/bytes -I /home/cs4100/.opam/4.02.3/lib/num -I /home/cs4100/.opam/4.02.3/lib/ocaml -o regexps.cmo regexps.ml
-+ /home/cs4100/.opam/4.02.3/bin/ocamlc.opt -c -I /home/cs4100/.opam/4.02.3/lib/batteries -I /home/cs4100/.opam/4.02.3/lib/bytes -I /home/cs4100/.opam/4.02.3/lib/num -I /home/cs4100/.opam/4.02.3/lib/ocaml -o regexps.cmo regexps.ml
-File "regexps.ml", line 247, characters 34-727:
-Error: This expression has type 'a list -> 'b -> 'c
-       but an expression was expected of type 'a language = 'a list -> bool
-       Type 'b -> 'c is not compatible with type bool 
-Command exited with code 2.
-# Compilation unsuccessful.
+# Target: regexps.cmx, tags: { compile, extension:cmx, extension:ml, file:regexps.cmx, file:regexps.ml, implem, native, ocaml, quiet, traverse }
+/home/cs4100/.opam/4.02.3/bin/ocamlopt.opt -c -I /home/cs4100/.opam/4.02.3/lib/batteries -I /home/cs4100/.opam/4.02.3/lib/bytes -I /home/cs4100/.opam/4.02.3/lib/num -I /home/cs4100/.opam/4.02.3/lib/ocaml -o regexps.cmx regexps.ml
+# Target: regexps.native, tags: { dont_link_with, extension:native, file:regexps.native, link, native, ocaml, program, quiet, traverse }
+/home/cs4100/.opam/4.02.3/bin/ocamlopt.opt -I /home/cs4100/.opam/4.02.3/lib/batteries -I /home/cs4100/.opam/4.02.3/lib/bytes -I /home/cs4100/.opam/4.02.3/lib/num -I /home/cs4100/.opam/4.02.3/lib/ocaml /home/cs4100/.opam/4.02.3/lib/ocaml/unix.cmxa /home/cs4100/.opam/4.02.3/lib/ocaml/nums.cmxa /home/cs4100/.opam/4.02.3/lib/ocaml/bigarray.cmxa /home/cs4100/.opam/4.02.3/lib/ocaml/str.cmxa /home/cs4100/.opam/4.02.3/lib/batteries/batteries.cmxa regexps.cmx -o regexps.native
+# Compilation successful.
