@@ -181,8 +181,6 @@ let rec string_to_re (s : string) : char regexp =
   else Concat (Char s.[0], string_to_re s')
 ;;
 
-if string_to_re "a" = Concat (Char 'a', Epsilon) then Printf.printf "succ\n" else Printf.printf "fail\n";;
-
 (** Recall from lecture that each RE denotes a *language*, i.e., a set
     of strings. Each string is a list of characters drawn from the 
     underlying alphabet, Sigma.
@@ -220,7 +218,7 @@ http://ocaml-batteries-team.github.io/batteries-included/hdoc2/BatList.html.
  *)
 
 let all_splits (s : 'char list) : ('char list * 'char list) list =
-  (* FILL IN DEFINITION HERE *) []
+  []
 ;;
 
 (* A test input: *)
@@ -247,7 +245,23 @@ all_splits [false; true];;
  *)
 
 let rec interp (r : 'char regexp) : 'char language =
-  (* FILL IN DEFINITION HERE *) fun _ -> false
+  match r with
+  | Empty -> fun i (a : 'char) -> if a = [] then true else false
+  | Epsilon -> fun i (a : 'char) -> if a = "" then true else false
+  | Char c -> fun i (a : 'char) -> if a = c then true else false
+  | Concat (r1, r2) -> fun i (a : 'char) -> true
+  | Star r' -> fun i (a : 'char) -> true
+  | Or (r1, r2) ->
+    let i1 = interp r1 in
+    let i2 = interp r2 in
+    fun i (a : 'char) -> if (i1 a || i2 a) then true else false
+  | And (r1, r2) ->
+     let i1 = interp r1 in
+     let i2 = interp r2 in
+     fun i (a : 'char) -> if (i1 a = i2 a) then true else false
+  | Not r' ->
+     let i' = interp r' in
+     fun i (a : 'char) -> if i' a = c then false else true
 
 let string_interp (r : char regexp)
     : string -> bool =

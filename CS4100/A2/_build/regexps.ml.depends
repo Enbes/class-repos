@@ -1,1 +1,1 @@
-regexps.ml: BatList BatPrintf BatString Batteries Printf String
+regexps.ml: BatList BatPrintf BatString Batteries String
