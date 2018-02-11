@@ -218,7 +218,11 @@ http://ocaml-batteries-team.github.io/batteries-included/hdoc2/BatList.html.
  *)
 
 let all_splits (s : 'char list) : ('char list * 'char list) list =
-  []
+  let rec split (s : 'char list) (i : int) : ('char list * 'char list) list =
+    if i = BatList.length s
+    then (BatList.takedrop i s) :: []
+    else (BatList.takedrop i s) :: split s (i+1)
+  in split s 0
 ;;
 
 (* A test input: *)

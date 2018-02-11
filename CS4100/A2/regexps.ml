@@ -218,7 +218,11 @@ http://ocaml-batteries-team.github.io/batteries-included/hdoc2/BatList.html.
  *)
 
 let all_splits (s : 'char list) : ('char list * 'char list) list =
-  []
+  let rec split (s : 'char list) (i : int) : ('char list * 'char list) list =
+    if i = BatList.length s
+    then (BatList.takedrop i s) :: []
+    else (BatList.takedrop i s) :: split s (i+1)
+  in split s 0
 ;;
 
 (* A test input: *)
@@ -246,16 +250,46 @@ all_splits [false; true];;
 
 let rec interp (r : 'char regexp) : 'char language =
   match r with
-  | Empty -> let i (x : 'char list) : bool =
-	       if x = [] then true else false
-	     in i
-  | Epsilon -> let i (x : 'char list) : bool = true in i
-  | Char c -> let i (x : 'char list) : bool = true in i
-  | Concat (r1, r2) -> let i (x : 'char list) : bool = true in i
-  | Star r' -> let i (x : 'char list) : bool = true in i
-  | Or (r1, r2) -> let i (x : 'char list) : bool = true in i
-  | And (r1, r2) -> let i (x : 'char list) : bool = true in i	      
-  | Not r' -> let i (x : 'char list) : bool = true in i
+  | Empty ->
+     let f (x : 'char list) : bool =
+       if x = [] then true else false
+     in f
+  | Epsilon ->
+     let f (x : 'char list) : bool =
+       true
+     in f
+  | Char c ->
+     let f (x : 'char list) : bool =
+       true
+     in f
+  | Concat (r1, r2) ->
+     let f1 = interp r1 in
+     let f2 = interp r2 in
+     let f (x : 'char list) : bool =
+       true
+     in f
+  | Star r' ->
+     let f' = interp r' in
+     let f (x : 'char list) : bool =
+       true
+     in f
+  | Or (r1, r2) ->
+     let f1 = interp r1 in
+     let f2 = interp r2 in
+     let f (x : 'char list) : bool =
+       true
+     in f
+  | And (r1, r2) ->
+     let f1 = interp r1 in
+     let f2 = interp r2 in
+     let f (x : 'char list) : bool =
+       true
+     in f	      
+  | Not r' ->
+     let f' = interp r' in
+     let f (x : 'char list) : bool =
+       true
+     in f
 
 let string_interp (r : char regexp) : string -> bool =
   fun s -> interp r (BatString.to_list s)
@@ -345,7 +379,7 @@ let test (testfun : expectedResult -> char regexp -> string -> 'a) : unit =
 BatPrintf.printf "PART I TEST CASES:\n";;
 test (test1 string_interp);;  
 
-
+(*
 (** ** Part II (EC): Regular Expression Derivatives 
 
     In Part I, you defined an interpreter [interp] that mapped REs to
@@ -451,3 +485,4 @@ string_matches (Star (Char 'a')) "aba";; (*expected output: false*)
 
 BatPrintf.printf "\nEC PART II TEST CASES:\n";;
 test (test1 string_matches);;
+ *)
