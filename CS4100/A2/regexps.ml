@@ -251,46 +251,52 @@ all_splits [false; true];;
 let rec interp (r : 'char regexp) : 'char language =
   match r with
   | Empty ->
-     let f (x : 'char list) : bool =
+     let f x : bool =
        if x = [] then true else false
      in f
   | Epsilon ->
-     let f (x : 'char list) : bool =
+     let f x : bool =
        true
      in f
   | Char c ->
-     let f (x : 'char list) : bool =
-       true
+     let rec f x : bool =
+       match x with
+       | [] -> false
+       | a :: l -> if (a = c) & (l = [])
+		   then true
+		   else false
      in f
   | Concat (r1, r2) ->
      let f1 = interp r1 in
      let f2 = interp r2 in
-     let f (x : 'char list) : bool =
-       true
+     let f x : bool =
+       match x with
+       | [] -> false
+       | a :: l -> f1 (BatList.take 1 x) & f2 l
      in f
   | Star r' ->
      let f' = interp r' in
-     let f (x : 'char list) : bool =
+     let f x : bool =
        true
      in f
   | Or (r1, r2) ->
      let f1 = interp r1 in
      let f2 = interp r2 in
-     let f (x : 'char list) : bool =
-       true
+     let f x : bool =
+       f1 x || f2 x
      in f
   | And (r1, r2) ->
      let f1 = interp r1 in
      let f2 = interp r2 in
-     let f (x : 'char list) : bool =
-       true
+     let f x : bool =
+       f1 x & f2 x
      in f	      
   | Not r' ->
      let f' = interp r' in
-     let f (x : 'char list) : bool =
-       true
+     let f x : bool =
+       f' x = false
      in f
-
+	  
 let string_interp (r : char regexp) : string -> bool =
   fun s -> interp r (BatString.to_list s)
 
