@@ -252,19 +252,17 @@ let rec interp (r : 'char regexp) : 'char language =
   match r with
   | Empty ->
      let f x : bool =
-       if x = [] then true else false
+       x = []
      in f
   | Epsilon ->
      let f x : bool =
        true
      in f
   | Char c ->
-     let rec f x : bool =
+     let f x : bool =
        match x with
        | [] -> false
-       | a :: l -> if (a = c) & (l = [])
-		   then true
-		   else false
+       | a :: l -> (a = c) & (l = [])
      in f
   | Concat (r1, r2) ->
      let f1 = interp r1 in
@@ -276,8 +274,10 @@ let rec interp (r : 'char regexp) : 'char language =
      in f
   | Star r' ->
      let f' = interp r' in
-     let f x : bool =
-       true
+     let rec f x : bool =
+       match x with
+       | [] -> true
+       | a :: l -> f' x & f l
      in f
   | Or (r1, r2) ->
      let f1 = interp r1 in
@@ -378,7 +378,9 @@ let test (testfun : expectedResult -> char regexp -> string -> 'a) : unit =
 	(Pass, Star(Star (Char 'a')), "aaaaaaaaaaaaaa");
 	(Pass, Star(Or(Char 'a', Char 'b')), "ababababb");
 	(Fail, Star(Or(Char 'a', Char 'b')), "ababaccbabb");
-	(Fail, Not (Star (Or(Char 'c', Char '*'))), "**************************");		
+	(Fail, Not (Star (Or(Char 'c', Char '*'))), "**************************");
+	(*New Testcases *)
+        
       ]
   in ();;
 
