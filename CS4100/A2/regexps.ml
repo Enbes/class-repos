@@ -218,7 +218,11 @@ http://ocaml-batteries-team.github.io/batteries-included/hdoc2/BatList.html.
  *)
 
 let all_splits (s : 'char list) : ('char list * 'char list) list =
-  (* FILL IN DEFINITION HERE *) []
+  let rec split (s : 'char list) (i : int) : ('char list * 'char list) list =
+    if i = BatList.length s
+    then (BatList.takedrop i s) :: []
+    else (BatList.takedrop i s) :: split s (i+1)
+  in split s 0
 ;;
 
 (* A test input: *)
@@ -245,10 +249,55 @@ all_splits [false; true];;
  *)
 
 let rec interp (r : 'char regexp) : 'char language =
-  (* FILL IN DEFINITION HERE *) fun _ -> false
-
-let string_interp (r : char regexp)
-    : string -> bool =
+  match r with
+  | Empty ->
+     let f x : bool =
+       x = []
+     in f
+  | Epsilon ->
+     let f x : bool =
+       true
+     in f
+  | Char c ->
+     let f x : bool =
+       match x with
+       | [] -> false
+       | a :: l -> (a = c) & (l = [])
+     in f
+  | Concat (r1, r2) ->
+     let f1 = interp r1 in
+     let f2 = interp r2 in
+     let f x : bool =
+       match x with
+       | [] -> false
+       | a :: l -> f1 (BatList.take 1 x) & f2 l
+     in f
+  | Star r' ->
+     let f' = interp r' in
+     let rec f x : bool =
+       match x with
+       | [] -> true
+       | a :: l -> f' x & f l
+     in f
+  | Or (r1, r2) ->
+     let f1 = interp r1 in
+     let f2 = interp r2 in
+     let f x : bool =
+       f1 x || f2 x
+     in f
+  | And (r1, r2) ->
+     let f1 = interp r1 in
+     let f2 = interp r2 in
+     let f x : bool =
+       f1 x & f2 x
+     in f	      
+  | Not r' ->
+     let f' = interp r' in
+     let f x : bool =
+       f' x = false
+     in f
+	  
+let string_interp (r : char regexp) : string -> bool =
   fun s -> interp r (BatString.to_list s)
 
 (* EXERCISE 4: 
@@ -329,14 +378,16 @@ let test (testfun : expectedResult -> char regexp -> string -> 'a) : unit =
 	(Pass, Star(Star (Char 'a')), "aaaaaaaaaaaaaa");
 	(Pass, Star(Or(Char 'a', Char 'b')), "ababababb");
 	(Fail, Star(Or(Char 'a', Char 'b')), "ababaccbabb");
-	(Fail, Not (Star (Or(Char 'c', Char '*'))), "**************************");		
+	(Fail, Not (Star (Or(Char 'c', Char '*'))), "**************************");
+	(*New Testcases *)
+        
       ]
   in ();;
 
 BatPrintf.printf "PART I TEST CASES:\n";;
 test (test1 string_interp);;  
 
-
+(*
 (** ** Part II (EC): Regular Expression Derivatives 
 
     In Part I, you defined an interpreter [interp] that mapped REs to
@@ -442,3 +493,4 @@ string_matches (Star (Char 'a')) "aba";; (*expected output: false*)
 
 BatPrintf.printf "\nEC PART II TEST CASES:\n";;
 test (test1 string_matches);;
+ *)
