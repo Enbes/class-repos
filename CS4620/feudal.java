@@ -14,8 +14,8 @@ class feudal {
     System.out.println("      FEUDAL SYSTEM\n");
     System.out.println("(1) View Nobles");
     System.out.println("(2) Add Noble");
-    System.out.println("(3) Delete Noble");
-    System.out.println("(4) Modify Noble");
+    System.out.println("(3) Remove Noble");
+    System.out.println("(4) Modify Numerical Noble Attribute");
     System.out.println("(5) Something Useful");
     System.out.println("(6) Another Useful Thing");
     System.out.println("(q) Quit\n");
@@ -53,73 +53,99 @@ class feudal {
     System.out.println("Added Noble");
   }
 
-  void select_course(Connection conn) 
-    throws SQLException, IOException {
+  void view_nobles(Connection conn)
+  throws SQLException, IOException {
+    String query = "select * from noble";
+    Statement stmt = conn.createStatement();
+    ResultSet rset;
 
-    String query1 = "select distinct lineno,courses.cno,ctitle " +
-                    "from courses,catalog " +
-                    "where courses.cno = catalog.cno and term = '";
-    String query;
-    String term_in = readEntry("Term: ");
-    query = query1 + term_in + "'";
-     
-    Statement stmt = conn.createStatement (); 
-    ResultSet rset = stmt.executeQuery(query);
-    System.out.println("");
-    while (rset.next ()) { 
-      System.out.println(rset.getString(1) + "   " +
-                         rset.getString(2) + "   " +
-                         rset.getString(3));
+    try {
+      rset = stmt.executeQuery(query);
     } 
-    System.out.println("");
-    String ls = readEntry("Select a course line number: ");
-    
-    grade2 g2 = new grade2();
-    boolean done;
-    char ch,ch1;
+    catch (SQLException e) {
+        System.out.println("Problem reading table");
+        while (e != null) {
+          System.out.println("Message     : " + e.getMessage());
+          e = e.getNextException();
+        }
+        return;
+    }
 
-    done = false;
-    do {
-      g2.print_menu();
-      System.out.print("Type in your option:");
-      System.out.flush();
-      ch = (char) System.in.read();
-      ch1 = (char) System.in.read();
-      switch (ch) {
-        case '1' : g2.add_enrolls(conn,term_in,ls);
-                   break;
-        case '2' : g2.add_course_component(conn,term_in,ls);
-                   break;
-        case '3' : g2.add_scores(conn,term_in,ls);
-                   break;
-        case '4' : g2.modify_score(conn,term_in,ls);
-                   break;
-        case '5' : g2.drop_student(conn,term_in,ls);
-                   break;
-        case '6' : g2.print_report(conn,term_in,ls);
-                   break;
-        case 'q' : done = true;
-                   break;
-        default  : System.out.println("Type in option again");
-      }
-    } while (!done);
+    System.out.print("NNAME PTNAME DNAME SEX BDATE WEALTH LEVY DEMESNE RUNAME RUPTNAME RRELATION");
 
+    while (rset.next()) {
+      System.out.print(rset.getstring(1));
+    }
   }
 
-  //readEntry function -- to read input string
-  static String readEntry(String prompt) {
-     try {
-       StringBuffer buffer = new StringBuffer();
-       System.out.print(prompt);
-       System.out.flush();
-       int c = System.in.read();
-       while(c != '\n' && c != -1) {
-         buffer.append((char)c);
-         c = System.in.read();
-       }
-       return buffer.toString().trim();
-     } catch (IOException e) {
-       return "";
-       }
-   }
-} 
+  void asnt_noble(Connection conn)
+  throws SQLException, IOException {
+    String nname = readEntry("Name of noble to remove: ");
+    String ptname = readEntry("Primary title of noble to remove: ");
+    String query = "delete noble where nname = '" + nname +
+                   "' and ptname = '" + ptname + "'";
+
+    conn.setAutoCommit(false);
+    Statement stmt = conn.createStatement (); 
+
+    int res;
+    try {
+      res = stmt.executeUpdate(query);
+    }
+    catch (SQLException e) {
+        System.out.println("Could not remove noble");
+        while (e != null) {
+          System.out.println("Message     : " + e.getMessage());
+          e = e.getNextException();
+        }
+        conn.rollback();
+        return;
+    }
+    System.out.println("Removed noble");
+    conn.commit();
+    conn.setAutoCommit(true);
+    stmt.close();    
+  }
+
+  void modify_noble(Connection conn)
+  throws SQLException, IOException {
+    String nname    = readEntry("Noble's name: ");
+    String ptname = readEntry("Noble's primary title: ");
+    String att = readEntry("Numerical attribute to modify (levy/wealth/demesne): ");
+    String query1 = "select " + att + "from noble where nname = '" + nname + "' and ptname = '" + ptname + "'";
+
+    Statement stmt = conn.createStatement (); 
+    ResultSet rset;
+    try {
+      rset = stmt.executeQuery(query1);
+    } catch (SQLException e) {
+        System.out.println("Error");
+        while (e != null) {
+          System.out.println("Message     : " + e.getMessage());
+          e = e.getNextException();
+        }
+        return;
+      }
+    System.out.println("");
+    if ( rset.next ()  ) {
+      System.out.println("Old " + att + " = " + rset.getString(1));
+      String na = readEntry("Enter new " + att + ": ");
+      String query2 = "update noble set " + att " = " + na + 
+                      " where nname = '" + nname + "' and ptname = '" +
+                      ptname + "'";
+      try {
+        stmt.executeUpdate(query2);
+      } catch (SQLException e) {
+          System.out.println("Could not modify " + att);
+          while (e != null) {
+            System.out.println("Message     : " + e.getMessage());
+            e = e.getNextException();
+          }
+          return;
+        }
+      System.out.println("Modified " + att + " successfully");
+    }
+    else 
+      System.out.println(att + " not found");
+    stmt.close();    
+  }

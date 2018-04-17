@@ -45,14 +45,14 @@ class feudal_system {
                     break;
         case '2' : f.add_noble(conn);
                    break;
-        case '3' : f.delete_noble(conn);
+        case '3' : f.asnt_noble(conn);
                    break;
         case '4' : f.modify_noble(conn);
                    break;
-        case '5' : f.useful1(conn);
+        /*case '5' : f.useful1(conn);
                    break;
         case '6' : f.useful2(conn);
-                   break;
+                   break;*/
         case 'q' : done = true;
                    break;
         default  : System.out.println("Type in option again");
