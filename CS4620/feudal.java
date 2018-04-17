@@ -135,14 +135,15 @@ class feudal {
                       ptname + "'";
       try {
         stmt.executeUpdate(query2);
-      } catch (SQLException e) {
-          System.out.println("Could not modify " + att);
-          while (e != null) {
-            System.out.println("Message     : " + e.getMessage());
-            e = e.getNextException();
-          }
-          return;
+      } 
+      catch (SQLException e) {
+        System.out.println("Could not modify " + att);
+        while (e != null) {
+          System.out.println("Message     : " + e.getMessage());
+          e = e.getNextException();
         }
+        return;
+      }
       System.out.println("Modified " + att + " successfully");
     }
     else 
