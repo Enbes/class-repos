@@ -1,7 +1,0 @@
-[colors.h:31]: (error) Code 'using namespace std' is invalid C code. Use --std or --language to configure the language.
-[game.cc:89]: (style) The scope of the variable 'value' can be reduced.
-[game.cc:131]: (style) The scope of the variable 'value' can be reduced.
-[game.h:9]: (error) Code 'namespacemain_savitch_14{' is invalid C code. Use --std or --language to configure the language.
-[space.h:11]: (error) Code 'using namespace std' is invalid C code. Use --std or --language to configure the language.
-[space.cc:20]: (style) The function 'other' is never used.
-(information) Cppcheck cannot find all the include files (use --check-config for details)
