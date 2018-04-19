@@ -150,3 +150,50 @@ class feudal {
       System.out.println(att + " not found");
     stmt.close();    
   }
+
+  void dyn_rep(Connection conn)
+  throws SQLException, IOException {
+    String dname = readEntry("Dynasty to analyze: ");
+
+    String query1 = "select * from noble where dname = '" + dname + "'";
+    System.out.println("Nobles of this dynasty:");
+    ResultSet rset1;
+    try {
+      rset1 = stmt.executeQuery(query);
+    } 
+    catch (SQLException e) {
+        System.out.println("Problem reading table");
+        while (e != null) {
+          System.out.println("Message     : " + e.getMessage());
+          e = e.getNextException();
+        }
+        return;
+    }
+    System.out.print("NNAME PTNAME DNAME SEX BDATE WEALTH LEVY DEMESNE RUNAME RUPTNAME RRELATION");
+    while (rset1.next()) {
+      System.out.print(rset.getstring(1));
+    } 
+
+    String query2 = "select * from realm, noble where dname = '" + dname + "' and nname = realm.runame and ptname = realm.ruptname";
+    System.out.println("Realms ruled by this dynasty:");
+    ResultSet rset1;
+    try {
+      rset2 = stmt.executeQuery(query);
+    } 
+    catch (SQLException e) {
+        System.out.println("Problem reading table");
+        while (e != null) {
+          System.out.println("Message     : " + e.getMessage());
+          e = e.getNextException();
+        }
+        return;
+    }
+    System.out.print("REALMNAME CDATE RUNAME RUPTNAME");
+    while (rset2.next()) {
+      System.out.print(rset.getstring(1));
+    }
+
+    String query3 = "select * from title, noble, de_jure"
+                    + "where noble.dname = '" + dname + "'"
+                    + "and ";
+  }

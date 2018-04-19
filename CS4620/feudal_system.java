@@ -49,9 +49,9 @@ class feudal_system {
                    break;
         case '4' : f.modify_noble(conn);
                    break;
-        /*case '5' : f.useful1(conn);
+        case '5' : f.dyn_rep(conn);
                    break;
-        case '6' : f.useful2(conn);
+        /*case '6' : f.useful2(conn);
                    break;*/
         case 'q' : done = true;
                    break;
