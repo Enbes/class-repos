@@ -151,49 +151,51 @@ class feudal {
     stmt.close();    
   }
 
-  void dyn_rep(Connection conn)
+  void re_rep(Connection conn)
   throws SQLException, IOException {
-    String dname = readEntry("Dynasty to analyze: ");
+  	String realmname = readEntry("Realm to analyze: ");
 
-    String query1 = "select * from noble where dname = '" + dname + "'";
-    System.out.println("Nobles of this dynasty:");
-    ResultSet rset1;
+  	String query1 = "select * from realm where realmname = '" + realmname + "'";
+  	Statement stmt1 = conn.createStatement();
+  	ResultSet rset1;
+  	try {
+  		rset1 = stmt1.executeQuery(query1);
+  	}
+  	catch (SQLException e) {
+  		System.out.println("Error reading table");
+  		while (e != null) {
+  			System.out.println("Message 	: " + e.getMessage());
+  			e = e.getNextException();
+  		}
+  		return;
+  	}
+    System.out.printf("%-22s%-22s%-22s%-22s\n","REALMNAME","C_DATE","RULERNAME","RUPTNAME");
+    while (rset.next()) {
+      System.out.printf("%-22s%-22s%-22s%-22s\n\n",rset1.getString(1),rset1.getString(2),rset1.getString(3),rset1.getString(4));
+    }
+
+    String query2 = "select * from realm, noble where realmname = '" + realmname + "' and realm.runame = noble.runame and realm.rptname = noble.rptname";
+    Statement stmt2 = conn.createStatement();
+    ResultSet rset2;
     try {
-      rset1 = stmt.executeQuery(query);
-    } 
-    catch (SQLException e) {
-        System.out.println("Problem reading table");
-        while (e != null) {
-          System.out.println("Message     : " + e.getMessage());
-          e = e.getNextException();
-        }
-        return;
+    	rset2 = stmt2.executeQuery(query2);
     }
-    System.out.print("NNAME PTNAME DNAME SEX BDATE WEALTH LEVY DEMESNE RUNAME RUPTNAME RRELATION");
-    while (rset1.next()) {
-      System.out.print(rset.getstring(1));
-    } 
+  	catch (SQLException e) {
+  		System.out.println("Error reading table");
+  		while (e != null) {
+  			System.out.println("Message 	: " + e.getMessage());
+  			e = e.getNextException();
+  		}
+  		return;
+  	}
+  	System.out.println("Nobles who live in this realm:");
+  	System.out.printf("%-22s%-22s%-22s%-22s%-22s%-22s%-22s%-22s%-22s%-22s%-22s\n",
+  					  "NNAME", "PTNAME", "DNAME", "SEX", "BDATE", "WEALTH", "LEVY", "DEMESNE", "RUNAME", "RUPTNAME", "RRELATION");
+  	System.out.printf("%-22s%-22s%-22s%-22s%-22s%-22s%-22s%-22s%-22s%-22s%-22s\n\n",
+  					  rset2.getString(1),rset2.getString(2),rset2.getString(3),rset2.getString(4),rset2.getString(5),
+  					  rset2.getString(6),rset2.getString(7),rset2.getString(8),rset2.getString(9),rset2.getString(10),rset2.getString(11));
 
-    String query2 = "select * from realm, noble where dname = '" + dname + "' and nname = realm.runame and ptname = realm.ruptname";
-    System.out.println("Realms ruled by this dynasty:");
-    ResultSet rset1;
-    try {
-      rset2 = stmt.executeQuery(query);
-    } 
-    catch (SQLException e) {
-        System.out.println("Problem reading table");
-        while (e != null) {
-          System.out.println("Message     : " + e.getMessage());
-          e = e.getNextException();
-        }
-        return;
-    }
-    System.out.print("REALMNAME CDATE RUNAME RUPTNAME");
-    while (rset2.next()) {
-      System.out.print(rset.getstring(1));
-    }
-
-    String query3 = "select * from title, noble, de_jure"
-                    + "where noble.dname = '" + dname + "'"
-                    + "and ";
+  	System.out.println("Realm statistics:");
+  	//total wealth, levy, and demesne - also total # of nobles and # of territories (as well as the territories themselves)
+  	//don't forget to add query to display selected dynasty in other report, also add dynasty statistics
   }
